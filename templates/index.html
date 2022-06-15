@@ -8,23 +8,76 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>SMART CAR</h2>
+            <h1>SMART CAR</h1>
         </div>
         <div class="main">
+            <h3 id="clock">clock</h3>
+            <br>
             <div>
                 <button onclick="music_on()">MUSIC ON</button>                      <!-- Javascript 함수 지정 -->
             </div>
             <div>
                 <button onclick="music_off()">MUSIC OFF</button>
             </div>
+            <div>
+                <h2 id="speed">speed</h2>
+            </div>
+
+            <div>
+                <input id="file" type="file" accept=".mp4">
+                <label className="input-file-button" for="file">Check BlackBox</label>
+                <video id="video"></video>
+            </div>
+           
         </div>
         <div id="result">
 
         </div>
+        
+        
     </div>
     <script>
+        //시간 
+        var Target = document.getElementById("clock");
+        function clock() {
+            var time = new Date();
+            var year = time.getFullYear();
+            var month = time.getMonth();
+            var date = time.getDate();
+            var day = time.getDay();
+            var week = ['일', '월', '화', '수', '목', '금', '토'];
+
+            var hours = time.getHours();
+            var minutes = time.getMinutes();
+            var seconds = time.getSeconds();
+
+            Target.innerText = 
+            `${year}년 ${month + 1}월 ${date}일 ${week[day]}요일 ` +
+            `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+                
+        }
+        //속도
+        function speed(){
+            fetch("/speed")
+
+            .then(response=> response.text())
+            .then(data=> {
+                console.log(data);
+                let result = document.querySelector("#result");
+                //if(int(data)>100) 100이상인 경우 텍스트 색 바꾸는거 해보실 ,, 
+                //    {document.getElementById("speed2").innerText=data;}
+                //else
+                document.getElementById("speed").innerText=data; 
+            });
+        }     
+        speed();
+        clock();
+        setInterval(speed, 1000);
+        setInterval(clock, 1000); // 1초마다 실행        
+        
+        //음악 ON
         function music_on(){
-            fetch("/music")
+            fetch("/music/on")
             .then(response=> response.text())
             .then(data=> {
                 console.log(data);
@@ -37,8 +90,7 @@
             });
         }
             
-        
-
+        //음악 OFF
         function music_off(){
             fetch("/music/off")
             .then(response=> response.text())
@@ -53,7 +105,32 @@
             });
         }
 
+        // 비디오
+        const inputFile = document.getElementById("file");
+            const video = document.getElementById("video");
 
+            inputFile.addEventListener("change", function(){
+                const file = inputFile.files[0];
+                const videourl = URL.createObjectURL(file);
+                video.setAttribute("src", videourl);
+                video.play();
+            })
+
+           
+        
     </script>
 </body>
 </html>
+
+<!-- 문제점들 -->
+<!--
+    1. mp4 변환
+    2. 카메라 label 위치
+-->
+
+<!-- 추가기능 -->
+<!--
+    1. 속도 100이상이면 글자색 빨강색으로 변환
+    2. 레코드 글자 넣기 ?
+    3. 이미지 넣을건지 말건지,, 
+-->

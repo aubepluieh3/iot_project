@@ -1,5 +1,5 @@
 body {
-    background-color: antiquewhite;
+    background-color: #BEEFFF;
 }
 
 .container {                    /* 전체 화면의 크기 마진 그리고 글자정렬 */
@@ -8,18 +8,52 @@ body {
     text-align: center;
 }
 
-.main {                         /* 첫번째 버튼 */
+.main { 
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    
 }
 
-.main div {                     /* 두번째 버튼. 새로 만들때 마다 번호 올려주면 됨 */
+.main div {                
     flex:1;
 }
+
+
 
 .main div button {              /* 버튼의 모양 */
     background-color: lightyellow;
     width:150px;
+    height:40px;
+    border-radius: 10px;
+    
+}
+
+.main div h2 { /* h2 모양 */           
+    background-color: lightyellow;
+    width:150px;
+    height:50px;
+    border-radius: 10px;
+    padding-top: 5px;
+    
+}
+
+.main div label { /*label 모양 */
+    color: black;              
+    background-color: lightyellow;
+    width:150px;
     height:80px;
     border-radius: 10px;
-    vertical-align: middle;
+
 }
+
+
+/*video 조정*/
+
+
+#file{
+    display: none;
+}
+
