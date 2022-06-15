@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SMART CAR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- css 파일 지정-->
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>SMART CAR</h2>
+        </div>
+        <div class="main">
+            <div>
+                <button onclick="music_on()">MUSIC ON</button>                      <!-- Javascript 함수 지정 -->
+            </div>
+            <div>
+                <button onclick="music_off()">MUSIC OFF</button>
+            </div>
+        </div>
+        <div id="result">
+
+        </div>
+    </div>
+    <script>
+        function music_on(){
+            fetch("/music")
+            .then(response=> response.text())
+            .then(data=> {
+                console.log(data);
+                let result = document.querySelector("#result");
+                if(data=="ok"){  
+                    result.innerHTML = "<h1>음악 재생중</h1>";
+                }else{
+                    result.innerHTML = "<h1>error</h1>";
+                }
+            });
+        }
+            
+        
+
+        function music_off(){
+            fetch("/music/off")
+            .then(response=> response.text())
+            .then(data=> {
+                console.log(data);
+                let result = document.querySelector("#result");
+                if(data=="ok"){  
+                    result.innerHTML = "<h1></h1>";
+                }else{
+                    result.innerHTML = "<h1>error</h1>";
+                }
+            });
+        }
+
+
+    </script>
+</body>
+</html>
