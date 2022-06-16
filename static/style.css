@@ -17,13 +17,30 @@ body {
     
 }
 
-.main div {                
-    flex:1;
+.main #rec{
+    background-color: rgb(18, 160, 243);
+    width:120px;
+    height:40px;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 40px;
+}
+
+.line { 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.line #btn{    /* 버튼 수직 정렬 */
+    flex-direction: column;
+    justify-content: center;
 }
 
 
-
-.main div button {              /* 버튼의 모양 */
+.line div button {              /* 버튼의 모양 */
     background-color: lightyellow;
     width:150px;
     height:40px;
@@ -31,16 +48,18 @@ body {
     
 }
 
-.main div h2 { /* h2 모양 */           
+.line div h2 { /* h2 모양 speed */           
     background-color: lightyellow;
     width:150px;
-    height:50px;
-    border-radius: 10px;
-    padding-top: 5px;
+    height:150px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 150px;
+    border: 3px solid;
     
 }
 
-.main div label { /*label 모양 */
+.line div label { /*label 모양 */
     color: black;              
     background-color: lightyellow;
     width:150px;
@@ -57,3 +76,7 @@ body {
     display: none;
 }
 
+#video{
+    width: 1000px;
+    height: 500px;
+}

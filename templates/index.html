@@ -2,23 +2,21 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>SMART CAR</title>
+    <title>MY CAR</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- css 파일 지정-->
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>SMART CAR</h1>
+            <h1>SOO'S CAR</h1>
         </div>
         <div class="main">
+
             <h3 id="clock">clock</h3>
+            <h3 id="rec">REC</h3>
             <br>
-            <div>
-                <button onclick="music_on()">MUSIC ON</button>                      <!-- Javascript 함수 지정 -->
-            </div>
-            <div>
-                <button onclick="music_off()">MUSIC OFF</button>
-            </div>
+            
+        <div class="line">
             <div>
                 <h2 id="speed">speed</h2>
             </div>
@@ -26,9 +24,23 @@
             <div>
                 <input id="file" type="file" accept=".mp4">
                 <label className="input-file-button" for="file">Check BlackBox</label>
-                <video id="video"></video>
+                <br>
+                <br>
+                <video id="video" controls poster="https://cdn.pixabay.com/photo/2016/09/13/11/04/browser-1666982_960_720.png"></video>
+                
             </div>
-           
+
+            <div class="btn">
+                <div>
+                    <button onclick="music_on()">MUSIC ON</button>                      <!-- Javascript 함수 지정 -->
+                </div>
+                <div>
+                    <button onclick="music_off()">MUSIC OFF</button>
+                </div>
+            </div>
+
+        </div>    
+   
         </div>
         <div id="result">
 
@@ -56,6 +68,8 @@
             `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
                 
         }
+       
+
         //속도
         function speed(){
             fetch("/speed")
@@ -64,17 +78,21 @@
             .then(data=> {
                 console.log(data);
                 let result = document.querySelector("#result");
-                //if(int(data)>100) 100이상인 경우 텍스트 색 바꾸는거 해보실 ,, 
-                //    {document.getElementById("speed2").innerText=data;}
-                //else
-                document.getElementById("speed").innerText=data; 
+                if(Number(data)>75) //속도 75 증가면 빨강색으로 style 바꿔주기
+                {   document.getElementById("speed").style.color='red';
+                    document.getElementById("speed").innerText=data;}
+                else
+                {   document.getElementById("speed").style.color='black';
+                    document.getElementById("speed").innerText=data; }
             });
         }     
         speed();
         clock();
-        setInterval(speed, 1000);
-        setInterval(clock, 1000); // 1초마다 실행        
         
+        setInterval(speed, 1000);
+        setInterval(clock, 1000); // 1초마다 실행       
+     
+
         //음악 ON
         function music_on(){
             fetch("/music/on")
@@ -82,9 +100,7 @@
             .then(data=> {
                 console.log(data);
                 let result = document.querySelector("#result");
-                if(data=="ok"){  
-                    result.innerHTML = "<h1>음악 재생중</h1>";
-                }else{
+                if(data=="fail"){  
                     result.innerHTML = "<h1>error</h1>";
                 }
             });
@@ -125,12 +141,12 @@
 <!-- 문제점들 -->
 <!--
     1. mp4 변환
-    2. 카메라 label 위치
+    2. 카메라 label 위치 check
 -->
 
 <!-- 추가기능 -->
 <!--
-    1. 속도 100이상이면 글자색 빨강색으로 변환
-    2. 레코드 글자 넣기 ?
-    3. 이미지 넣을건지 말건지,, 
+    1. 속도 100이상이면 글자색 빨강색으로 변환 check
+    2. 레코드 글자 넣기 ? check
+    3. 이미지 넣을건지 말건지,, check
 -->

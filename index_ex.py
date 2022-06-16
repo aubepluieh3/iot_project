@@ -9,15 +9,19 @@ import time
 import RPi.GPIO as GPIO 
 import picamera
 import datetime
-from flask import Flask, request
+from flask import Flask
 from flask import render_template
 import threading
+from subprocess import call 
 import os
+
 app = Flask(__name__)
 GPIO.setmode(GPIO.BOARD)                    #BOARD는 커넥터 pin번호 사용
+
 #led 핀 번호
 red_pin = 7
 music_pin = 12
+
 # LED 핀의 OUT설정
 GPIO.setup(red_pin, GPIO.OUT,initial=GPIO.LOW)
 
@@ -41,6 +45,7 @@ b=493
 # 4옥타브 도~시 , 5옥타브 도의 주파수 
 Frq1 = [c,d,e] #전원 부팅음
 Frq2 = [a,e ] #전원 꺼지는 소리
+
 #작은별 
 Frq3 = [c,c,g,g,a,a,g]
 Frq4 = [f,f,e,e,d,d,c]
@@ -130,7 +135,7 @@ def music_on():
                     p.ChangeFrequency(fr)    #주파수를 fr로 변경
                     time.sleep(speed1)       #speed 초만큼 딜레이 (0.5s)
                 time.sleep(speed2)
-                return "ok"                         # 함수가 'ok'문자열을 반환함
+            return "ok"                         # 함수가 'ok'문자열을 반환함    
     except :
         return "fail"
 
@@ -154,11 +159,18 @@ def blackbox_start():
             camera.resolution = (640,480)
             camera.start_preview()
             now= datetime.datetime.now()
-            filename=now.strftime('%Y-%m-%d %H:%M:%S') #현재날짜시각
-            camera.start_recording(output=filename+'.h264')
+            file_h264='blackbox.h264'
+            filename=now.strftime('%Y-%m-%d_%H:%M:%S') #현재날짜시각
+            file_mp4=filename+'.mp4'
+            camera.start_recording(file_h264)
             camera.wait_recording(60) #60초
             camera.stop_recording()
-            camera.stop_preview()          
+            camera.stop_preview()
+            command = "MP4Box -add "+ file_h264+" " +file_mp4
+            call([command], shell=True) #convert mp4
+            os.remove('blackbox.h264') #변경 완료한 파일 삭제
+            
+            
 
 #속도
 @app.route("/speed")
@@ -168,7 +180,7 @@ def speed_start():
         vry_pos = readadc(vry_channel)
         sw_val = readadc(sw_channel)
         global speed
-        if(vrx_pos == 0 and sw_val == 1023 and speed<100): # SPEED UP , 최대속도 100으로 설정
+        if(vrx_pos == 0 and sw_val == 1023 and speed<98): # SPEED UP , 최대속도 98로 설정
             speed = speed+3     
             time.sleep(1)   # 1초동안 대기상태
             return str(speed) 
@@ -176,13 +188,13 @@ def speed_start():
             time.sleep(1)   # 1초동안 대기상태
             return str(speed) 
 
-        elif(vrx_pos == 1023 and sw_val == 1023 and speed>0): #SPEED DOWN 
+        elif(vrx_pos == 1023 and sw_val == 1023 and speed>3): #SPEED DOWN 
             speed = speed-3
             time.sleep(1)   # 1초동안 대기상태
             return str(speed) 
     return "speed"
 
-
+#전원 버튼
 def button():
     global power_led, power_music
     if(power_led == False): #LED가 안 들어와 있다면
@@ -213,7 +225,7 @@ def button():
         p.stop()      # GPIO 설정 초기화 
         power_led= False
         power_music=False
-        exit()
+        
                                  
 
 
